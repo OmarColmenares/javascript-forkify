@@ -3,7 +3,8 @@ import {elements} from './base'
 export const getInput = () => elements.searchInput.value;
 
 export const clearResults = () => {
-    elements.resultsList.innerHTML = ''
+    elements.resultsList.innerHTML = '';
+    elements.searchResPages.innerHTML = '';
 }
 
 export const clearInput = () => {
@@ -25,7 +26,6 @@ const limitRecipeTitle = (title, limit = 17) => {
 }
 
 const renderRecipe = recipe => {
-    const title = limitRecipeTitle(recipe.title)
     const markup = `
             <li>
                 <a class="results__link" href="#${recipe.recipe_id}">
@@ -38,12 +38,40 @@ const renderRecipe = recipe => {
                     </div>
                 </a>
             </li>`;
-    elements.resultsList.insertAdjacentHTML('beforeend', markup)
+    elements.resultsList.insertAdjacentHTML('beforeend', markup);
+};
+// 
+
+const createButton = (page, type) => `
+        <button class="btn-inline results__btn--${type}" data-id=${type === 'prev' ? page - 1 : page + 1}>
+            <span>Page ${type === 'next' ? page + 1 : page - 1}</span>
+            <svg class="search__icon">
+                <use href="img/icons.svg#icon-triangle-${type === 'prev' ? 'left' : 'right'}"></use>
+            </svg>
+        </button>`;
+
+const renderButtons = (page,numResults,resPerPages) => {
+    const pages = Math.ceil(numResults/resPerPages);
+    let button;
+    if(page === 1 && pages > 1){
+        button = createButton(page, 'next');
+    }else if(page < pages){
+        button = `
+            ${createButton(page, 'prev')};
+            ${createButton(page, 'next')};
+        `;
+    }else if(page === pages && pages > 1 ){
+        button = createButton(page, 'prev');
+    };
+    elements.searchResPages.insertAdjacentHTML('afterbegin', button);
 };
 
+export const renderResults = (recipes, page = 1, resPerPage = 10) => {
+    const start = (page - 1) * resPerPage;
+    const end = page * resPerPage;
+    //Render Recipes
+    recipes.slice(start, end).forEach(renderRecipe);
 
-export const renderResults = recipes => {
-    //recipes.forEach(el => renderRecipe(el));
-    //console.log(recipes);
-    recipes.forEach(renderRecipe)
+    //render pages
+    renderButtons(page, recipes.length, resPerPage);
 };

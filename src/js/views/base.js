@@ -2,7 +2,8 @@ export const elements = {
     searchForm: document.querySelector('.search'),
     searchInput: document.querySelector('.search__field'),
     resultsList: document.querySelector('.results__list'),
-    searchRes: document.querySelector('.results')
+    searchRes: document.querySelector('.results'),
+    searchResPages: document.querySelector('.results__pages')
 };
 
 export const elementStrings = {
@@ -10,7 +11,6 @@ export const elementStrings = {
 };
 
 export const renderLoader = parent => {
-    //class="${elementStrings.loader}"
     const loader = `
         <div class="${elementStrings.loader}">
             <svg>
