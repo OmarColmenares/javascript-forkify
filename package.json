@@ -11,9 +11,17 @@
   "author": "Omar Colmenares",
   "license": "ISC",
   "devDependencies": {
+    "@babel/polyfill": "^7.8.7",
+    "babel-loader": "^8.1.0",
+    "html-webpack-plugin": "^4.0.2",
     "webpack": "^4.42.1",
     "webpack-cli": "^3.3.11",
-    "webpack-dev-server": "^3.10.3"
+    "webpack-dev-server": "^3.10.3",
+    "@babel/core": "^7.9.0",
+    "@babel/preset-env": "^7.9.0"
   },
-  "dependencies": {}
+  "dependencies": {
+
+    "axios": "^0.19.2"
+  }
 }
