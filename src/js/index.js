@@ -1,5 +1,6 @@
 import Search from './models/Search';
-//import * as searchView from './views/searchView'
+import Recipe from './models/Recipe';
+
 import * as searchView from './views/searchView'
 import {elements, renderLoader, clearLoader} from './views/base'
 
@@ -17,13 +18,17 @@ const controlSearch = async () => {
         searchView.clearInput();
         searchView.clearResults();
         renderLoader(elements.searchRes);
-
-        // 4) Search for recipes
-        await state.search.getResults();
-        
-        // 5) Render results on UI
-        clearLoader();
-        searchView.renderResults(state.search.result);
+        try{
+            // 4) Search for recipes
+            await state.search.getResults();
+            
+            // 5) Render results on UI
+            clearLoader();
+            searchView.renderResults(state.search.result);
+        }catch{
+            alert('Something was wrong with the search :(');
+            clearLoader();
+        }
     };
 };
 
@@ -40,3 +45,24 @@ elements.searchResPages.addEventListener('click', e => {
         searchView.renderResults(state.search.result, goToPage);
     }
 });
+
+const controlRecipe = async () => {
+    // 1) get hash from window
+    const id = window.location.hash.replace('#', '');
+    if(id){
+        try{
+            state.recipe = new Recipe(id);
+
+            await state.recipe.getRecipe()
+
+            state.recipe.calcTime();
+
+            state.recipe.calcServings();
+
+            console.log(state.recipe);
+        }catch(err){
+            alert('Something was wrong :(')
+        }
+    }
+}
+['hashchange', 'load'].forEach(event => window.addEventListener(event, controlRecipe));
