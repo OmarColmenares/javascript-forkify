@@ -2,6 +2,7 @@ import Search from './models/Search';
 import Recipe from './models/Recipe';
 
 import * as searchView from './views/searchView'
+import * as recipeView from './views/recipeView'
 import {elements, renderLoader, clearLoader} from './views/base'
 
 const state =  {}
@@ -40,7 +41,7 @@ elements.searchForm.addEventListener('submit', (e) => {
 elements.searchResPages.addEventListener('click', e => {
     let btn = e.target.closest('.btn-inline');
     if(btn){
-        const goToPage = parseInt(btn.dataset.id, 10);
+        const goToPage = parseInt(btn.dataset.id);
         searchView.clearResults();
         searchView.renderResults(state.search.result, goToPage);
     }
@@ -50,22 +51,28 @@ const controlRecipe = async () => {
     // 1) get hash from window
     const id = window.location.hash.replace('#', '');
     if(id){
+        // Prepare the UI
+        recipeView.clearRecipe();
+        renderLoader(elements.recipe);
+        state.recipe = new Recipe(id);
+        //Create recipe object
         try{
-            state.recipe = new Recipe(id);
             //Get recipes and parse ingredients
-            await state.recipe.getRecipe()
+            await state.recipe.getRecipe();
             state.recipe.parseIngredients();
-            
+
             //Calculing servings and time
             state.recipe.calcTime();
             state.recipe.calcServings();
 
             //Render recipe
-            console.log(state.recipe);
+            clearLoader();
+            recipeView.renderRecipe(state.recipe);
+
         }catch(err){
-            alert('Something was wrong :(')
+            alert('Something was wrong :( with the recipe');
             console.log(err);
-        }
-    }
-}
+        };
+    };
+};
 ['hashchange', 'load'].forEach(event => window.addEventListener(event, controlRecipe));
