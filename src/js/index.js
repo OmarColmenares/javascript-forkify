@@ -50,10 +50,15 @@ elements.searchResPages.addEventListener('click', e => {
 const controlRecipe = async () => {
     // 1) get hash from window
     const id = window.location.hash.replace('#', '');
-    if(id){
+    if (id) {
         // Prepare the UI
         recipeView.clearRecipe();
         renderLoader(elements.recipe);
+
+        //High Light Selected Item
+        if( state.search) searchView.highLightSelected(id);
+
+        //Create a new Recipe Object
         state.recipe = new Recipe(id);
         //Create recipe object
         try{
