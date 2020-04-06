@@ -65,11 +65,11 @@ const controlRecipe = async () => {
             //Get recipes and parse ingredients
             await state.recipe.getRecipe();
             state.recipe.parseIngredients();
-
+            
             //Calculing servings and time
             state.recipe.calcTime();
             state.recipe.calcServings();
-
+           
             //Render recipe
             clearLoader();
             recipeView.renderRecipe(state.recipe);
@@ -80,4 +80,24 @@ const controlRecipe = async () => {
         };
     };
 };
+
 ['hashchange', 'load'].forEach(event => window.addEventListener(event, controlRecipe));
+
+//Handle Serving
+
+elements.recipe.addEventListener('click', e => {
+    //Decrease
+    if (e.target.matches('.btn-decrease, .btn-decrease *')){
+        
+        if(state.recipe.servings > 1) { 
+            state.recipe.updateServings('dec');
+            recipeView.updateServingsIngredientes(state.recipe);
+        };
+    };
+
+    //Increase
+    if (e.target.matches('.btn-increase, .btn-increase *')){
+        state.recipe.updateServings('inc');
+        recipeView.updateServingsIngredientes(state.recipe);
+    };
+});

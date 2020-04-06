@@ -14,6 +14,7 @@ export default class Recipe {
             this.url = res.data.recipe.source_url;
             this.ingredients = res.data.recipe.ingredients;
         }catch(err){
+            alert('Something was wrong with the data');
             console.log(err);
         };
     };
@@ -68,7 +69,7 @@ export default class Recipe {
                     count: parseInt(arrIng[0], 10),
                     unit :'',
                     ingredient: arrIng.slice(1).join(' ')
-                }
+                };
 
             }else if(unitIndex === -1){
                 //there isn't a unit and NO number in 1st position
@@ -76,11 +77,23 @@ export default class Recipe {
                     count: 1,
                     unit: '',
                     ingredient
-                }
-            }
+                };
+            };
             return objIng;
         });
 
         this.ingredients = newIngredients;
     };
-}
+
+    updateServings(type) {
+        //Servings
+        const newServings = type === 'dec' ? this.servings - 1 : this.servings + 1;
+
+        //Ingredients
+         this.ingredients.forEach((el, i) => {
+            el.count *= (newServings / this.servings)
+         });
+
+        this.servings = newServings;
+    };
+};

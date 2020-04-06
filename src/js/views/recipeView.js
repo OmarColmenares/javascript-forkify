@@ -5,7 +5,7 @@ export const clearRecipe = () => {
     elements.recipe.innerHTML = ''
 };
 
-const formatNumber = count => {
+const formatCount = count => {
     if (count) {
         const [int, dec] = count.toString().split('.').map(el => parseInt(el));
 
@@ -27,7 +27,7 @@ const createIngredient = ingredient => `
         <svg class="recipe__icon">
             <use href="img/icons.svg#icon-check"></use>
         </svg>
-        <div class="recipe__count">${formatNumber(ingredient.count)}</div>
+        <div class="recipe__count">${formatCount(ingredient.count)}</div>
         <div class="recipe__ingredient">
             <span class="recipe__unit">${ingredient.unit}</span>
             ${ingredient.ingredient}
@@ -59,12 +59,12 @@ export const renderRecipe = recipe => {
             <span class="recipe__info-text"> servings</span>
 
             <div class="recipe__info-buttons">
-                <button class="btn-tiny">
+                <button class="btn-tiny btn-decrease">
                     <svg>
                         <use href="img/icons.svg#icon-circle-with-minus"></use>
                     </svg>
                 </button>
-                <button class="btn-tiny">
+                <button class="btn-tiny btn-increase">
                     <svg>
                         <use href="img/icons.svg#icon-circle-with-plus"></use>
                     </svg>
@@ -108,4 +108,15 @@ export const renderRecipe = recipe => {
 `;
 
 elements.recipe.insertAdjacentHTML('afterbegin', markup);
+};
+
+export const updateServingsIngredientes = recipe => {
+    // Servings
+    document.querySelector('.recipe__info-data--people').textContent = recipe.servings;
+
+    //Ingredients
+    const countElements = Array.from(document.querySelectorAll('.recipe__count'));
+    countElements.forEach((el, i) => {
+        el.textContent = formatCount(recipe.ingredients[i].count);
+    });
 }
