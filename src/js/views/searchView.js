@@ -2,11 +2,6 @@ import {elements} from './base'
 
 export const getInput = () => elements.searchInput.value;
 
-export const clearResults = () => {
-    elements.resultsList.innerHTML = '';
-    elements.searchResPages.innerHTML = '';
-}
-
 export const clearInput = () => {
     elements.searchInput.value = ''
 };
@@ -46,7 +41,6 @@ const renderRecipe = recipe => {
             </li>`;
     elements.resultsList.insertAdjacentHTML('beforeend', markup);
 };
-// 
 
 const createButton = (page, type) => `
         <button class="btn-inline results__btn--${type}" data-id=${type === 'prev' ? page - 1 : page + 1}>
@@ -81,3 +75,8 @@ export const renderResults = (recipes, page = 1, resPerPage = 10) => {
     //render pages
     renderButtons(page, recipes.length, resPerPage);
 };
+
+export const clearResults = () => {
+    elements.resultsList.innerHTML = '';
+    elements.searchResPages.innerHTML = '';
+}

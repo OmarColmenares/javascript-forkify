@@ -10,7 +10,8 @@ import * as likesView from './views/likesView';
 import { elements, renderLoader, clearLoader } from './views/base';
 
 const state =  {};
-window.state = state;
+
+/*SEARCH CONTROLLER*/
 const controlSearch = async () => {
     // 1) Get query from view
     const query = searchView.getInput();
@@ -40,7 +41,7 @@ elements.searchForm.addEventListener('submit', (e) => {
     e.preventDefault();
     controlSearch();
 });
-//document.querySelector('.results__pages').
+
 elements.searchResPages.addEventListener('click', e => {
     let btn = e.target.closest('.btn-inline');
     if(btn){
@@ -69,7 +70,7 @@ const controlRecipe = async () => {
             await state.recipe.getRecipe();
             state.recipe.parseIngredients();
             
-            //Calculing servings and time
+            //Calculating servings and time
             state.recipe.calcTime();
             state.recipe.calcServings();
            
@@ -87,7 +88,7 @@ const controlRecipe = async () => {
 };
 
 ['hashchange', 'load'].forEach(event => window.addEventListener(event, controlRecipe));
-
+/*LIST CONTROLLER*/
 const controlList = () => {
     if (!state.list) state.list = new List();
 
@@ -96,10 +97,8 @@ const controlList = () => {
             listView.renderItem(item);
         });
 };
-/// TESTINGGGGGGGGGGGG
-state.likes = new Likes();
-likesView.toggleLikeMenu(state.likes.getNumLikes());
 
+/*LIKES CONTROLLER*/
 const controlLikes = () => {
     if (!state.likes) state.likes = new Likes();
 
@@ -128,6 +127,18 @@ const controlLikes = () => {
     likesView.toggleLikeMenu(state.likes.getNumLikes());
 };
 
+// Restore liked recipes 
+window.addEventListener('load', () => {
+    state.likes = new Likes();
+    //Restore likes
+    state.likes.readStorage();
+    //toggle likes menu button
+    likesView.toggleLikeMenu(state.likes.getNumLikes());
+    //render existing likes
+    state.likes.likes.forEach(el => likesView.renderLike(el));
+
+});
+
 elements.shopping.addEventListener('click', e => {
     const id = e.target.closest('.shopping__item').dataset.itemid;
 
@@ -142,6 +153,7 @@ elements.shopping.addEventListener('click', e => {
         if (val >= 0) state.list.updateCount(id, val);
     };
 });
+
 
 //Handle Serving
 elements.recipe.addEventListener('click', e => {
