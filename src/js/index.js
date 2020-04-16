@@ -93,15 +93,16 @@ const controlRecipe = async () => {
 ['hashchange', 'load'].forEach(event => window.addEventListener(event, controlRecipe));
 
 /*LIST CONTROLLER*/
-const controlList = () => {
+const controlList = ingredients => {
     if (!state.list) state.list = new List();
     
-    if (state.list.items.length === 0) {
+    if (state.list.items.length < 30) {
         elements.shoppingBtn.style.display = 'block';
-        state.recipe.ingredients.forEach(el => {
+        ingredients.forEach(el => {
             const item = state.list.addItem(el.count, el.unit, el.ingredient);
             listView.renderItem(item);
         });
+        state.list.persistData();
     }
 };
 
@@ -113,6 +114,7 @@ const controlDeleteList = () => {
         state.list.deleteItem(el);
         listView.deleteItem(el);
     });
+    state.list.persistData();
 };
 
 /*LIKES CONTROLLER*/
@@ -146,14 +148,20 @@ const controlLikes = () => {
 
 // Restore liked recipes 
 window.addEventListener('load', () => {
+    state.list = new List();
     state.likes = new Likes();
-    //Restore likes
+    //Restore likes and list items
     state.likes.readStorage();
+    state.list.readStorage();
     //toggle likes menu button
     likesView.toggleLikeMenu(state.likes.getNumLikes());
     //render existing likes
     state.likes.likes.forEach(el => likesView.renderLike(el));
+    state.list.items.forEach(el => listView.renderItem(el));
 
+    if (state.list.items.length > 0) {
+        elements.shoppingBtn.style.display = 'block';
+    } 
 });
 //elements.shopping
 elements.shopping.addEventListener('click', e => {
@@ -169,6 +177,7 @@ elements.shopping.addEventListener('click', e => {
 
         if (val >= 0) state.list.updateCount(id, val);
     }
+    state.list.persistData();
 });
 
 document.querySelector('.shopping').addEventListener('click', e => {
@@ -177,7 +186,21 @@ document.querySelector('.shopping').addEventListener('click', e => {
     }
 })
 
-//Handle Serving
+elements.recipe.addEventListener('dblclick', e => {
+    let item, obj;
+    if(e.target.matches('.recipe__item, .recipe__item *')){
+        item = e.target.closest('.recipe__item');
+        obj = [
+            {
+                count: parseFloat(item.querySelector('.recipe__count').innerHTML),
+                unit: item.querySelector('.recipe__unit').innerHTML,
+                ingredient: item.querySelector('.recipe__ingredient--selected').innerHTML
+            }
+    ];
+    controlList(obj);
+    }
+});
+
 elements.recipe.addEventListener('click', e => {
     //Decrease
     if (e.target.matches('.btn-decrease, .btn-decrease *')){
@@ -187,16 +210,14 @@ elements.recipe.addEventListener('click', e => {
             recipeView.updateServingsIngredientes(state.recipe);
         };
     };
-
     //Increase
     if (e.target.matches('.btn-increase, .btn-increase *')){
         state.recipe.updateServings('inc');
         recipeView.updateServingsIngredientes(state.recipe);
     };
-
     //Shopping List
     if (e.target.matches('.recipe__btn--shoping, .recipe__btn--shoping *')){
-        controlList();
+        controlList(state.recipe.ingredients);
     };
 
     //Likes

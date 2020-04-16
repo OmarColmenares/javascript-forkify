@@ -29,4 +29,15 @@ export default class List {
     updateCount(id, newCount) {
         this.items.find(el => el.id === id).count = newCount;
     };
+    
+    persistData() {
+        localStorage.setItem('shopping__list', JSON.stringify(this.items));
+    }
+
+    readStorage() {
+        const storage = JSON.parse(localStorage.getItem('shopping__list'));
+
+        if (storage) this.items = storage;
+    }
+
 };

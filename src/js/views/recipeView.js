@@ -24,20 +24,20 @@ const formatCount = count => {
 };
 
 const createIngredient = ingredient => `
-        <li class="recipe__item draggable" draggable="true">
-        <svg class="recipe__icon">
-            <use href="img/icons.svg#icon-check"></use>
-        </svg>
-        <div class="recipe__count">${formatCount(ingredient.count)}</div>
-        <div class="recipe__ingredient">
-            <span class="recipe__unit">${ingredient.unit}</span>
-            ${ingredient.ingredient}
-        </div>
+        <li class="recipe__item">
+            <svg class="recipe__icon">
+                <use href="img/icons.svg#icon-check"></use>
+            </svg>
+            <div class="recipe__count">${formatCount(ingredient.count)}</div>
+            <div class="recipe__ingredient">
+                <span class="recipe__unit">${ingredient.unit}</span>
+                <span class="recipe__ingredient--selected" >${ingredient.ingredient}</span>
+            </div>
         </li>
 `;
 export const renderRecipe = (recipe, isLiked) => {
     const markup = `
-    <figure class="recipe__fig">
+    <figure class="recipe__fig" >
         <img src="${recipe.img}" alt="${recipe.title}" class="recipe__img">
         <h1 class="recipe__title">
             <span>${recipe.title}</span>
