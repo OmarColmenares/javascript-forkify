@@ -10,6 +10,7 @@ import * as likesView from './views/likesView';
 import { elements, renderLoader, clearLoader } from './views/base';
 
 const state =  {};
+window.state = state;
 
 /*SEARCH CONTROLLER*/
 const controlSearch = async () => {
@@ -51,6 +52,7 @@ elements.searchResPages.addEventListener('click', e => {
     }
 });
 
+/*RECIPE CONTROLLER*/
 const controlRecipe = async () => {
     // 1) get hash from window
     const id = window.location.hash.replace('#', '');
@@ -78,7 +80,8 @@ const controlRecipe = async () => {
             clearLoader();
             recipeView.renderRecipe(
                 state.recipe,
-                state.likes.isLiked(id));
+                state.likes.isLiked(id)
+            );
 
         }catch(err){
             alert('Something was wrong :( with the recipe');
@@ -88,14 +91,28 @@ const controlRecipe = async () => {
 };
 
 ['hashchange', 'load'].forEach(event => window.addEventListener(event, controlRecipe));
+
 /*LIST CONTROLLER*/
 const controlList = () => {
     if (!state.list) state.list = new List();
-
+    
+    if (state.list.items.length === 0) {
+        elements.shoppingBtn.style.display = 'block';
         state.recipe.ingredients.forEach(el => {
             const item = state.list.addItem(el.count, el.unit, el.ingredient);
             listView.renderItem(item);
         });
+    }
+};
+
+const controlDeleteList = () => {
+    elements.shoppingBtn.style.display = 'none';
+
+    const ids = state.list.getIds();
+    ids.forEach(el => {
+        state.list.deleteItem(el);
+        listView.deleteItem(el);
+    });
 };
 
 /*LIKES CONTROLLER*/
@@ -138,7 +155,7 @@ window.addEventListener('load', () => {
     state.likes.likes.forEach(el => likesView.renderLike(el));
 
 });
-
+//elements.shopping
 elements.shopping.addEventListener('click', e => {
     const id = e.target.closest('.shopping__item').dataset.itemid;
 
@@ -151,9 +168,14 @@ elements.shopping.addEventListener('click', e => {
         const val = parseFloat(e.target.value);
 
         if (val >= 0) state.list.updateCount(id, val);
-    };
+    }
 });
 
+document.querySelector('.shopping').addEventListener('click', e => {
+    if (e.target.matches('.list__delete--btn, .list__delete--btn *')) {
+        controlDeleteList();
+    }
+})
 
 //Handle Serving
 elements.recipe.addEventListener('click', e => {

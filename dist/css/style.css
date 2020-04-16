@@ -121,6 +121,12 @@ body {
   .btn-tiny:not(:last-child) {
     margin-right: .3rem; }
 
+.list__delete--btn{
+  margin-top: 0.5rem;
+  justify-content: center;
+  display: none;
+}
+
 .heading-2 {
   font-size: 1.8rem;
   font-weight: 600;

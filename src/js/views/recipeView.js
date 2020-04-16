@@ -24,7 +24,7 @@ const formatCount = count => {
 };
 
 const createIngredient = ingredient => `
-        <li class="recipe__item">
+        <li class="recipe__item draggable" draggable="true">
         <svg class="recipe__icon">
             <use href="img/icons.svg#icon-check"></use>
         </svg>
