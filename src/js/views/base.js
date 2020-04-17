@@ -12,7 +12,8 @@ export const elements = {
 };
 
 export const elementStrings = {
-    loader: 'loader'
+    loader: 'loader',
+    searchError: 'search__error'
 };
 
 export const renderLoader = parent => {

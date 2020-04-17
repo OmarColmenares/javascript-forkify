@@ -1,10 +1,23 @@
-import {elements} from './base'
+import {elements, elementStrings} from './base'
 
 export const getInput = () => elements.searchInput.value;
 
-export const clearInput = () => {
-    elements.searchInput.value = ''
-};
+export const clearInput = () => elements.searchInput.value = '';
+
+export const searchError = (query) => {
+    const markup = `
+    <div class="search__error">
+        <span class="search__error--message"> No recipes for "${query}" </span><br />
+        <span class="search__error--message">Try another recipe</span>
+    </div>`
+
+    elements.resultsList.insertAdjacentHTML('beforeend', markup);
+}
+
+export const clearSearchError = () => {
+    const searchError = document.querySelector(`.${elementStrings.searchError}`);
+    searchError.parentElement.removeChild(searchError);
+}
 
 export const highLightSelected = id => {
     const arrResults = Array.from(document.querySelectorAll('.results__link'))

@@ -16,31 +16,33 @@ window.state = state;
 const controlSearch = async () => {
     // 1) Get query from view
     const query = searchView.getInput();
+    searchView.clearResults();
+
     if(query){
         // 2) New search object and add to state
         state.search = new Search(query);
-
-        // 3) Prepare UI for results 
-        searchView.clearInput();
+        // 3) Prepare UI for results
         searchView.clearResults();
         renderLoader(elements.searchRes);
-        try{
+        try {
             // 4) Search for recipes
             await state.search.getResults();
-            
             // 5) Render results on UI
+            searchView.clearSearchError();
             clearLoader();
             searchView.renderResults(state.search.result);
-        }catch{
-            alert('Something was wrong with the search :(');
+        } catch {
+            console.clear();
             clearLoader();
+            searchView.searchError(query);
         };
     };
 };
 
-elements.searchForm.addEventListener('submit', (e) => {
-    e.preventDefault();
-    controlSearch();
+elements.searchForm.addEventListener('keyup', (e) => {
+        e.preventDefault();
+        clearLoader();
+        controlSearch();
 });
 
 elements.searchResPages.addEventListener('click', e => {
