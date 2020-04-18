@@ -16,7 +16,10 @@ window.state = state;
 const controlSearch = async () => {
     // 1) Get query from view
     const query = searchView.getInput();
-    if(query.length === 0) clearSearchError();
+    if(query.length === 0) {
+        clearSearchError();
+        searchView.clearResults();
+    };
     if(query){
         // 2) New search object and add to state
         state.search = new Search(query);
@@ -31,7 +34,7 @@ const controlSearch = async () => {
             clearSearchError();
             searchView.renderResults(state.search.result);
         } catch {
-            console.clear();
+            //console.clear();
             clearLoader();
             clearSearchError();
             searchError(query, elements.resultsList);
