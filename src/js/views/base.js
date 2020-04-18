@@ -31,3 +31,17 @@ export const clearLoader = () => {
 
     if(loader) loader.parentElement.removeChild(loader);
 }
+export const searchError = (query, parent) => {
+    const markup = `
+    <div class="search__error">
+        <span class="search__error--message"> No recipes for "${query}" </span><br />
+        <span class="search__error--message">Try another recipe</span>
+    </div>`
+
+    parent.insertAdjacentHTML('beforeend', markup);
+}
+
+export const clearSearchError = () => {
+    const searchError = document.querySelector(`.${elementStrings.searchError}`);
+    if(searchError) searchError.parentElement.removeChild(searchError);
+}

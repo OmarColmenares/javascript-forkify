@@ -7,7 +7,7 @@ import * as searchView from './views/searchView';
 import * as recipeView from './views/recipeView';
 import * as listView from './views/listView';
 import * as likesView from './views/likesView';
-import { elements, renderLoader, clearLoader } from './views/base';
+import { elements, renderLoader, clearLoader, searchError, clearSearchError } from './views/base';
 
 const state =  {};
 window.state = state;
@@ -16,8 +16,7 @@ window.state = state;
 const controlSearch = async () => {
     // 1) Get query from view
     const query = searchView.getInput();
-    searchView.clearResults();
-
+    if(query.length === 0) clearSearchError();
     if(query){
         // 2) New search object and add to state
         state.search = new Search(query);
@@ -28,20 +27,21 @@ const controlSearch = async () => {
             // 4) Search for recipes
             await state.search.getResults();
             // 5) Render results on UI
-            searchView.clearSearchError();
             clearLoader();
+            clearSearchError();
             searchView.renderResults(state.search.result);
         } catch {
             console.clear();
             clearLoader();
-            searchView.searchError(query);
+            clearSearchError();
+            searchError(query, elements.resultsList);
         };
     };
 };
 
-elements.searchForm.addEventListener('keyup', (e) => {
-        e.preventDefault();
+elements.searchForm.addEventListener('keyup', () => {
         clearLoader();
+        clearSearchError();
         controlSearch();
 });
 
@@ -100,10 +100,12 @@ const controlList = ingredients => {
     
     if (state.list.items.length < 30) {
         elements.shoppingBtn.style.display = 'block';
+
         ingredients.forEach(el => {
             const item = state.list.addItem(el.count, el.unit, el.ingredient);
             listView.renderItem(item);
         });
+
         state.list.persistData();
     }
 };
@@ -112,10 +114,11 @@ const controlDeleteList = () => {
     elements.shoppingBtn.style.display = 'none';
 
     const ids = state.list.getIds();
-    ids.forEach(el => {
-        state.list.deleteItem(el);
-        listView.deleteItem(el);
+    ids.forEach(id => {
+        state.list.deleteItem(id);
+        listView.deleteItem(id);
     });
+
     state.list.persistData();
 };
 
