@@ -34,15 +34,16 @@ const controlSearch = async () => {
             clearSearchError();
             searchView.renderResults(state.search.result);
         } catch {
-            //console.clear();
+            console.clear();
             clearLoader();
             clearSearchError();
-            searchError(query, elements.resultsList);
+            searchError(`No recipes for "${query}"`, elements.resultsList);
         };
     };
 };
 
-elements.searchForm.addEventListener('keyup', () => {
+elements.searchForm.addEventListener('keyup', e => {
+        e.preventDefault();
         clearLoader();
         clearSearchError();
         controlSearch();
@@ -71,16 +72,15 @@ const controlRecipe = async () => {
 
         //Create a new Recipe Object
         state.recipe = new Recipe(id);
-        //Create recipe object
-        try{
+        try {
             //Get recipes and parse ingredients
             await state.recipe.getRecipe();
             state.recipe.parseIngredients();
-            
+
             //Calculating servings and time
             state.recipe.calcTime();
             state.recipe.calcServings();
-           
+
             //Render recipe
             clearLoader();
             recipeView.renderRecipe(
@@ -88,9 +88,9 @@ const controlRecipe = async () => {
                 state.likes.isLiked(id)
             );
 
-        }catch(err){
-            alert('Something was wrong :( with the recipe');
-            console.log(err);
+        } catch(err) {
+            clearLoader();
+            searchError('Something has gone wrong with the recipe.',elements.recipe);
         };
     };
 };

@@ -1,7 +1,7 @@
 import uniqid from 'uniqid';
 
 export default class List {
-    constructor(){
+    constructor () {
        this.items = [];
     };
 
@@ -14,7 +14,6 @@ export default class List {
        };
        this.items.push(item);
        return item;
-       
     };
 
     deleteItem(id) {
@@ -29,7 +28,7 @@ export default class List {
     updateCount(id, newCount) {
         this.items.find(el => el.id === id).count = newCount;
     };
-    
+
     persistData() {
         localStorage.setItem('shopping__list', JSON.stringify(this.items));
     }

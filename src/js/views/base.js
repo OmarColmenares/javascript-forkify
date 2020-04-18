@@ -29,19 +29,19 @@ export const renderLoader = parent => {
 export const clearLoader = () => {
     const loader = document.querySelector(`.${elementStrings.loader}`);
 
-    if(loader) loader.parentElement.removeChild(loader);
+    if (loader) loader.parentElement.removeChild(loader);
 }
-export const searchError = (query, parent) => {
+export const searchError = (message, parent) => {
     const markup = `
     <div class="search__error">
-        <span class="search__error--message"> No recipes for "${query}" </span><br />
+        <span class="search__error--message"> ${message} </span><br />
         <span class="search__error--message">Try another recipe</span>
-    </div>`
+    </div>`;
 
-    parent.insertAdjacentHTML('beforeend', markup);
+    parent.insertAdjacentHTML('afterbegin', markup);
 }
 
 export const clearSearchError = () => {
     const searchError = document.querySelector(`.${elementStrings.searchError}`);
-    if(searchError) searchError.parentElement.removeChild(searchError);
+    if (searchError) searchError.parentElement.removeChild(searchError);
 }

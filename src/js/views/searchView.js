@@ -1,16 +1,18 @@
-import {elements, elementStrings} from './base'
+import { elements } from './base'
 
 export const getInput = () => elements.searchInput.value;
 
 export const highLightSelected = id => {
-    const arrResults = Array.from(document.querySelectorAll('.results__link'))
-    arrResults.forEach(el => el.classList.remove('results__link--active'))
+    const arrResults = Array.from(document.querySelectorAll('.results__link'));
+    arrResults.forEach(el => el.classList.remove('results__link--active'));
     document.querySelector(`.results__link[href="#${id}"]`).classList.add('results__link--active');
 };
 
 export const limitRecipeTitle = (title, limit = 17) => {
     const newTitle = [];
+
     if(title.length >= limit){
+        
         title.split(' ').reduce((acc, cur) => {
             if(acc + cur.length <= limit){
                 newTitle.push(cur);
@@ -49,14 +51,14 @@ const createButton = (page, type) => `
 const renderButtons = (page,numResults,resPerPages) => {
     const pages = Math.ceil(numResults/resPerPages);
     let button;
-    if(page === 1 && pages > 1){
+    if (page === 1 && pages > 1) {
         button = createButton(page, 'next');
-    }else if(page < pages){
+    } else if(page < pages) {
         button = `
             ${createButton(page, 'prev')};
             ${createButton(page, 'next')};
         `;
-    }else if(page === pages && pages > 1 ){
+    } else if (page === pages && pages > 1 ) {
         button = createButton(page, 'prev');
     };
     elements.searchResPages.insertAdjacentHTML('afterbegin', button);

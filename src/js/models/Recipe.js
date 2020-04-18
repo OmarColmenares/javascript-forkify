@@ -15,8 +15,7 @@ export default class Recipe {
             this.url = res.data.recipe.source_url;
             this.ingredients = res.data.recipe.ingredients;
         } catch(err) {
-            alert('Something was wrong with the data');
-            console.log(err);
+            alert('Something was wrong with the recipe');
         };
     };
 
@@ -32,18 +31,18 @@ export default class Recipe {
 
     parseIngredients() {
         const unitLongs = ['tablespoons', 'tablespoon', 'ounces', 'ounce', 'teaspoons', 'teaspoon', 'cups', 'pounds'];
-        const unitShorts = ['tbsp', 'tbsp', 'oz', 'oz', 'tsp', 'tsp', 'cup', 'pound']
-        const units = [...unitShorts, 'kg', 'g']
+        const units = ['tbsp', 'tbsp', 'oz', 'oz', 'tsp', 'tsp', 'cup', 'pound', 'kg', 'g']
 
         const newIngredients = this.ingredients.map(el => {
             // 1) Uniform units
             let ingredient = el.toLowerCase();
             unitLongs.forEach((unit, i) => {
-                ingredient = ingredient.replace(unit, unitShorts[i]);
+                ingredient = ingredient.replace(unit, units[i]);
             });
 
             // 2) Remove parenthesis
             ingredient = ingredient.replace(/ *\([^)]*\) */g, ' ');
+            ingredient = ingredient.replace('-', ' ');
 
             // 3) Parse ingredients into count, unit and ingredient
             const arrIng = ingredient.split(' ');

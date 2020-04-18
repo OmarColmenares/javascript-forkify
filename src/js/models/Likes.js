@@ -1,5 +1,5 @@
 export default class Likes {
-    constructor() {
+    constructor () {
         this.likes = [];
     };
 
